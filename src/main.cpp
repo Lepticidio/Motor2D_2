@@ -15,7 +15,7 @@ int iHeight = 1000;
 
 Vec2 vMousePos;
 
-void ListenerCallback(Sprite& _sprite, float _deltaTime)
+void EmptyCallback(Sprite& _sprite, float _deltaTime)
 {
 }
 
@@ -89,15 +89,16 @@ int main()
 	double* pXMouse = &dXMouse;
 	double* pYMouse = &dYMouse;
 
-	unsigned char* sWaspBytes = stbi_load("data//wasp.png", &iWidthWasp, &iHeightWasp, nullptr, 4);
+	unsigned char* sWaspBytes = stbi_load("data//wasp_anim.png", &iWidthWasp, &iHeightWasp, nullptr, 4);
 	ltex_t* pTextureWasp = nullptr;
 	pTextureWasp = ltex_alloc(iWidthWasp, iHeightWasp, 1);
 	ltex_setpixels(pTextureWasp, sWaspBytes);
 	stbi_image_free(sWaspBytes);
 
-	Sprite wasp(pTextureWasp, 1, 1);
+	Sprite wasp(pTextureWasp, 8, 1);
 	wasp.setPosition(Vec2(500, 750));
-	wasp.setCollisionType(COLLISION_PIXELS);
+	wasp.setCallback(EmptyCallback);
+	wasp.setFps(8);
 
 
 	unsigned char* sCircleBytes = stbi_load("data//circle.png", &iWidthCircle, &iHeightCircle, nullptr, 4);
@@ -108,15 +109,9 @@ int main()
 
 	Sprite listenerSprite(pTextureCircle, 1, 1);
 	listenerSprite.setPosition(Vec2(500, 900));
-	listenerSprite.setCallback(ListenerCallback);
-	listenerSprite.setCollisionType(COLLISION_CIRCLE);
+	listenerSprite.setCallback(EmptyCallback);
 	listenerSprite.setScale(Vec2(4,4));
 
-	unsigned char* sRectBytes = stbi_load("data//rect.png", &iWidthRect, &iHeightRect, nullptr, 4);
-	ltex_t* pTextureRect = nullptr;
-	pTextureRect = ltex_alloc(iWidthRect, iHeightRect, 1);
-	ltex_setpixels(pTextureRect, sRectBytes);
-	stbi_image_free(sRectBytes);
 	const int iNumberSprites = 2;
 	Sprite* allSprites [iNumberSprites] = {&wasp, &listenerSprite };
 
@@ -218,6 +213,7 @@ int main()
 
 		//5.3) Actualizamos lógica de juego
 		listenerSprite.update(deltaTime);
+		wasp.update(deltaTime);
 
 		for (int i = 0; i < iNumberSprites - 1; i++)
 		{
