@@ -2,11 +2,10 @@
 #include "AudioSource.h"
 class AudioListener
 {
-private:
-	void setListenerPosition(float x, float y, float z);
-	void setListenerVelocity(float x, float y, float z);
-    void setListenerOrientation(float x, float y, float z);
 public:
+    void setListenerPosition(float x, float y, float z);
+    void setListenerVelocity(float x, float y, float z);
+    void setListenerOrientation(float x, float y, float z);
     static AudioListener& getInstance()
     {
         static AudioListener    instance;
