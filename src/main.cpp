@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "Sprite.h"
+#include "AudioListener.h"
 #include <stb_image.h>
 
 
@@ -134,6 +135,40 @@ int main()
 	const int iNumberSprites = 4;
 	Sprite* allSprites [iNumberSprites] = {&wasp, &box, &ball, &mouseSprite};
 
+	//Audio
+	ALCdevice* pDevice = alcOpenDevice(NULL);
+	ALCcontext* pContext = alcCreateContext(pDevice, NULL);
+	ALCboolean contextCurrent = alcMakeContextCurrent(pContext);
+
+	//AudioListener* pListener;
+	//pListener->getInstance();
+	AudioListener* pAudioListener = new AudioListener();
+	ALenum auxError = alGetError();
+	if (auxError != AL_NO_ERROR)
+	{
+
+		return 0;
+	}
+	AudioBuffer* pMusic;
+	pMusic = pMusic->load("data//music.wav");
+
+	auxError = alGetError();
+	if (auxError != AL_NO_ERROR)
+	{
+
+		return 0;
+	}
+	AudioSource source = AudioSource(pMusic);
+
+	auxError = alGetError();
+	if (auxError != AL_NO_ERROR)
+	{
+
+		return 0;
+	}
+
+	source.play();
+
 	//5) Bucle principal
 	while (!glfwWindowShouldClose(pWindow) && bOpen)
 	{
@@ -162,6 +197,26 @@ int main()
 		{
 			mouseSprite.setTexture(pTextureWasp, 1, 1);
 			mouseSprite.setCollisionType(COLLISION_PIXELS);
+		}
+
+
+
+
+		if (GetAsyncKeyState(VK_UP))
+		{
+			source.increasePitch();
+		}
+		if (GetAsyncKeyState(VK_DOWN))
+		{
+			source.decreasePitch();
+		}
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+			source.moveRight();
+		}
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+			source.moveLeft();
 		}
 		glfwGetCursorPos(pWindow, pXMouse, pYMouse);
 		vMousePos = Vec2(dXMouse, dYMouse);
